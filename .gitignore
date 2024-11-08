@@ -2,6 +2,9 @@
 obj-dtct/
 trash_venv/
 TACO_TN_UAV/data/
+TACO/data/
+coco_human/data/
+people_detection/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
