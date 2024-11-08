@@ -1,5 +1,7 @@
 # Custom
 obj-dtct/
+trash_venv/
+TACO_TN_UAV/data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
