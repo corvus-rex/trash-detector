@@ -11,21 +11,22 @@ if __name__ == "__main__":
     source_directory = args.source_directory
     destination_directory = args.destination_directory
 
+    # Create the destination directory if it doesn't exist
     os.makedirs(destination_directory, exist_ok=True)
-
-    # Iterate over each batch subdirectory
     for batch in os.listdir(source_directory):
-        batch_path = os.path.join(source_directory, batch)
-        
-        # Check if the path is a directory
-        if os.path.isdir(batch_path):
-            # Iterate over each image in the batch directory
-            for image_file in os.listdir(batch_path):
-                image_path = os.path.join(batch_path, image_file)
-                
-                # Ensure the current file is a file (not a subdirectory)
-                if os.path.isfile(image_path):
-                    # Move the image to the destination directory
-                    shutil.move(image_path, os.path.join(destination_directory, image_file))
+        if batch.startswith("batch_"):
+            batch_path = os.path.join(source_directory, batch)
+            
+            if os.path.isdir(batch_path):
+                batch_number = batch.split("_")[-1]
 
-    print("All images have been combined into the destination directory.")
+                for image_file in os.listdir(batch_path):
+                    image_path = os.path.join(batch_path, image_file)
+                    
+                    if os.path.isfile(image_path):
+                        new_file_name = f"{batch_number}_{os.path.splitext(image_file)[0]}.jpg"
+                        destination_path = os.path.join(destination_directory, new_file_name)
+
+                        shutil.copy(image_path, destination_path)
+
+    print(f"All images have been combined and renamed in the '{destination_directory}' directory.")
