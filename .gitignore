@@ -1,9 +1,10 @@
 # Custom
 obj-dtct/
 trash_venv/
-TACO_TN_UAV/data/
+TACO_TN_UAV/
 TACO/data/
 coco_human/data/
+merged_data/
 people_detection/data/
 
 # Byte-compiled / optimized / DLL files

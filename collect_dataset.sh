@@ -3,9 +3,9 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 # Download Roboflow's dataset
 roboflow login
-bash $SCRIPT_DIR/TACO_TN_UAV/downloader.sh
-bash $SCRIPT_DIR/coco_human/downloader.sh
-bash $SCRIPT_DIR/people_detection/downloader.sh
+roboflow download -f yolov11 -l $SCRIPT_DIR/TACO_TN_UAV trash-recognition-fixed/taco_tn_uav
+roboflow download -f yolov11 -l $SCRIPT_DIR/coco_human/data shreks-swamp/coco-dataset-limited--person-only
+roboflow download -f yolov11 -l $SCRIPT_DIR/people_detection/data leo-ueno/people-detection-o4rdr
 
 # Download TACO's dataset
 python $SCRIPT_DIR/TACO/download.py
