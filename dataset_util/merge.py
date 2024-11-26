@@ -62,33 +62,35 @@ def merge_yolo(datasets, output_dir, taco_indices):
         dataset_labels = os.path.join(dataset, "labels")
         
         # Copy images and labels
-        for image_file in os.listdir(dataset_images):
-            src_image_path = os.path.join(dataset_images, image_file)
-            new_image_name = f"{image_counter:06d}.jpg"  # Ensure unique name
-            dst_image_path = os.path.join(images_dir, new_image_name)
-            shutil.copy(src_image_path, dst_image_path)
+        for image_file in os.listdir(dataset_images):    
+            if image_file.lower().endswith(".jpg"):  # Check for .jpg extension
 
-            # Modify and copy corresponding label
-            label_file = image_file.replace(".jpg", ".txt")
-            src_label_path = os.path.join(dataset_labels, label_file)
-            dst_label_path = os.path.join(labels_dir, new_image_name.replace(".jpg", ".txt"))
-            
-            if dataset_counter in taco_indices:
-                if os.path.exists(src_label_path):
-                    with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
-                        for line in src_file:
-                            parts = line.split()
-                            parts[0] = '1'  # Change the class ID to '1' if it's a TACO dataset
-                            dst_file.write(" ".join(parts) + "\n")
-            else:
-                if os.path.exists(src_label_path):
-                    with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
-                        for line in src_file:
-                            parts = line.split()
-                            parts[0] = '0'  # Change the class ID to '0' if it's a human dataset
-                            dst_file.write(" ".join(parts) + "\n")
+                src_image_path = os.path.join(dataset_images, image_file)
+                new_image_name = f"{image_counter:06d}.jpg"  # Ensure unique name
+                dst_image_path = os.path.join(images_dir, new_image_name)
+                shutil.copy(src_image_path, dst_image_path)
 
-            image_counter += 1
+                # Modify and copy corresponding label
+                label_file = image_file.replace(".jpg", ".txt")
+                src_label_path = os.path.join(dataset_labels, label_file)
+                dst_label_path = os.path.join(labels_dir, new_image_name.replace(".jpg", ".txt"))
+                
+                if dataset_counter in taco_indices:
+                    if os.path.exists(src_label_path):
+                        with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
+                            for line in src_file:
+                                parts = line.split()
+                                parts[0] = '1'  # Change the class ID to '1' if it's a TACO dataset
+                                dst_file.write(" ".join(parts) + "\n")
+                else:
+                    if os.path.exists(src_label_path):
+                        with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
+                            for line in src_file:
+                                parts = line.split()
+                                parts[0] = '0'  # Change the class ID to '0' if it's a human dataset
+                                dst_file.write(" ".join(parts) + "\n")
+
+                image_counter += 1
         print(f"Dataset {dataset} completed, Counter: {dataset_counter}")
         dataset_counter += 1
 

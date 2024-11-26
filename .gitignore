@@ -6,6 +6,7 @@ TACO/data/
 coco_human/data/
 merged_data/
 people_detection/data/
+Person-detection-16/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
