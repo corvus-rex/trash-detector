@@ -42,13 +42,6 @@ def is_intersect(bbox1, bbox2, height, width, max_dist):
 
     intersect =  not (x_max1 <= x_min2 or x_max2 <= x_min1 or
                 y_max1 >= y_min2 or y_max2 >= y_min1)
-    print(x_max1, x_min1, y_max1, y_min1)
-    print(x_max2, x_min2, y_max2, y_min2)
-    print(intersect)
-    print(x_max1 <= x_min2)
-    print(x_max2 <= x_min1)
-    print(y_max1 <= y_min2)
-    print(y_max2 <= y_min1)
     return intersect
 
 def crop_regions(image_path, region_dict, label_file_path, index, output_dir):
@@ -87,7 +80,6 @@ def crop_regions(image_path, region_dict, label_file_path, index, output_dir):
                 if max_y_cdt > max_y:
                     max_y = max_y_cdt
             regions.append((min_x, max_x, min_y, max_y))
-            print("Regions: ", regions)
             cropped = img[min_y:max_y, min_x:max_x]
             out = os.path.join(output_dir, f"result_{index}_{idx}.jpg")
             cv2.imwrite(out, cropped)
