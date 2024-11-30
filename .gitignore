@@ -9,6 +9,7 @@ people_detection/data/
 Littering--8/
 yolo_res/
 masks/
+Litter-Dataset-2/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

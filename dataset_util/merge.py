@@ -2,6 +2,7 @@ from pycocotools.coco import COCO
 import json
 import os
 import shutil
+from . import seg2bbox
 
 def merge_coco_json(json_files, output_file):
     merged_annotations = {
@@ -47,14 +48,14 @@ def merge_coco_json(json_files, output_file):
         json.dump(merged_annotations, f)
 
 
-def merge_yolo(datasets, output_dir, taco_indices):
+def merge_yolo(datasets, output_dir, taco_indices, start_idx=0, seg_idx=[]):
     # Create merged directories
     images_dir = os.path.join(output_dir, "images")
     labels_dir = os.path.join(output_dir, "labels")
     os.makedirs(images_dir, exist_ok=True)
     os.makedirs(labels_dir, exist_ok=True)
 
-    image_counter = 0  # To handle file naming conflicts
+    image_counter = start_idx  # To handle file naming conflicts
     dataset_counter = 0
 
     for dataset in datasets:
@@ -72,21 +73,20 @@ def merge_yolo(datasets, output_dir, taco_indices):
             label_file = image_file.replace(".jpg", ".txt")
             src_label_path = os.path.join(dataset_labels, label_file)
             dst_label_path = os.path.join(labels_dir, new_image_name.replace(".jpg", ".txt"))
-            
-            if dataset_counter in taco_indices:
-                if os.path.exists(src_label_path):
-                    with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
-                        for line in src_file:
-                            parts = line.split()
+
+            if os.path.exists(src_label_path):
+                with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
+                    for line in src_file:
+                        parts = line.split()
+                        if dataset_counter in taco_indices:
                             parts[0] = '1'  # Change the class ID to '1' if it's a TACO dataset
-                            dst_file.write(" ".join(parts) + "\n")
-            else:
-                if os.path.exists(src_label_path):
-                    with open(src_label_path, 'r') as src_file, open(dst_label_path, 'w') as dst_file:
-                        for line in src_file:
-                            parts = line.split()
+                        else:
                             parts[0] = '0'  # Change the class ID to '0' if it's a human dataset
-                            dst_file.write(" ".join(parts) + "\n")
+                        if dataset_counter in seg_idx:
+                            bboxinfo = seg2bbox.seg_to_bbox(parts)
+                        else:
+                            bboxinfo = " ".join(parts) + "\n"
+                        dst_file.write(bboxinfo)
 
             image_counter += 1
         print(f"Dataset {dataset} completed, Counter: {dataset_counter}")
