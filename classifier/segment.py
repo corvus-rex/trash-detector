@@ -86,3 +86,30 @@ def crop_regions(image_path, region_dict, label_file_path, index, output_dir):
         print(f"Cropped image {image_path} and saved result to {out}")
         return regions
 
+def crop_humans(image_path, image_name, label_file_path, output_dir):
+    if os.path.isfile(label_file_path):
+        with open(label_file_path, 'r') as file:
+            img = cv2.imread(image_path)
+            height, width, _ = img.shape
+            src_file = [line.strip() for line in file]
+            idx = 0
+            for i in range(len(src_file)):
+                parts = src_file[i].split()
+                label = parts[0]
+                if label == '0':
+                    obj_x_radius = (float(parts[3]) / 2) * width
+                    obj_y_radius = (float(parts[4]) / 2) * height
+                    centroid_x = float(parts[1]) * width
+                    centroid_y = ((float(parts[2]))) * height
+                    min_x = int(centroid_x - obj_x_radius)
+                    max_x = int(centroid_x + obj_x_radius)
+                    min_y = int(centroid_y - obj_y_radius)
+                    max_y = int(centroid_y + obj_y_radius)
+                    dir = os.path.join(output_dir, image_name.replace(".jpg", ''))
+                    os.makedirs(dir, exist_ok=True)
+                    cropped = img[min_y:max_y, min_x:max_x]
+                    out = os.path.join(dir, f"{idx}.jpg")
+                    cv2.imwrite(out, cropped)
+                idx += 1
+
+
