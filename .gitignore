@@ -10,6 +10,8 @@ Littering--8/
 yolo_res/
 masks/
 Litter-Dataset-2/
+kkpm.v1-raw.yolov11/
+segmented/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
